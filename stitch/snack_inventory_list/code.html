@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CASNACK Inventory List</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#4a148c", // Deep purple from the logo
+                        secondary: "#9c27b0", // Slightly lighter purple for gradients/accents
+                        accent: "#e0e0e0", // Silver/Metallic
+                        "background-light": "#f3e5f5", // Very light purple tint
+                        "background-dark": "#1a0529", // Very dark purple, almost black
+                        "surface-dark": "#2d0c42", // Card background in dark mode
+                        "silver-gradient-start": "#f5f5f5",
+                        "silver-gradient-end": "#9e9e9e",
+                    },
+                    fontFamily: {
+                        display: ["Montserrat", "sans-serif"],
+                        body: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem",
+                    },
+                    backgroundImage: {
+                        'silver-metallic': 'linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 50%, #e0e0e0 100%)',
+                        'purple-brushed': 'linear-gradient(180deg, #4a148c 0%, #311b92 100%)',
+                    }
+                },
+            },
+        };
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Montserrat:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<style>::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 2px;
+        }.metallic-text {
+            background: linear-gradient(to bottom, #ffffff, #c0c0c0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 1px 2px rgba(0,0,0,0.3);
+        }.glass-panel {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-100 font-body min-h-screen transition-colors duration-300 antialiased selection:bg-purple-500 selection:text-white pb-24">
+<div class="h-12 w-full fixed top-0 z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md flex items-center justify-between px-6 text-sm font-medium">
+<span>9:41</span>
+<div class="flex items-center space-x-2">
+<span class="material-icons-round text-base">signal_cellular_alt</span>
+<span class="material-icons-round text-base">wifi</span>
+<span class="material-icons-round text-base">battery_full</span>
+</div>
+</div>
+<header class="pt-16 pb-6 px-5 sticky top-0 z-40 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-purple-200/20 dark:border-purple-800/20 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-700 to-purple-900 shadow-lg border border-purple-400/30 flex items-center justify-center relative overflow-hidden group">
+<div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="font-display font-bold text-xl text-gray-200">C</span>
+</div>
+<h1 class="text-2xl font-display font-bold tracking-tight text-primary dark:text-white">
+                    Inventory
+                </h1>
+</div>
+<button class="p-2 rounded-full hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors relative">
+<span class="material-icons-round text-gray-600 dark:text-gray-300">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-background-light dark:border-background-dark"></span>
+</button>
+</div>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-icons-round text-gray-400 group-focus-within:text-purple-500 transition-colors">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-3 rounded-2xl border-none ring-1 ring-purple-200 dark:ring-purple-800/50 bg-white dark:bg-surface-dark text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 transition-shadow shadow-sm" placeholder="Search products, SKU..." type="text"/>
+<div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
+<span class="material-icons-round text-gray-400 hover:text-purple-500">qr_code_scanner</span>
+</div>
+</div>
+</header>
+<div class="px-5 pb-4 overflow-x-auto whitespace-nowrap scrollbar-hide flex gap-3">
+<button class="px-4 py-1.5 rounded-full bg-primary text-white text-sm font-medium shadow-md shadow-purple-900/20 border border-transparent">
+            All Items
+        </button>
+<button class="px-4 py-1.5 rounded-full bg-white dark:bg-surface-dark text-gray-600 dark:text-gray-300 border border-purple-100 dark:border-purple-800 text-sm font-medium hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors">
+            Snacks
+        </button>
+<button class="px-4 py-1.5 rounded-full bg-white dark:bg-surface-dark text-gray-600 dark:text-gray-300 border border-purple-100 dark:border-purple-800 text-sm font-medium hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors">
+            Beverages
+        </button>
+<button class="px-4 py-1.5 rounded-full bg-white dark:bg-surface-dark text-gray-600 dark:text-gray-300 border border-purple-100 dark:border-purple-800 text-sm font-medium hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors">
+            Premium
+        </button>
+<button class="px-4 py-1.5 rounded-full bg-white dark:bg-surface-dark text-gray-600 dark:text-gray-300 border border-purple-100 dark:border-purple-800 text-sm font-medium hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors">
+            Low Stock
+        </button>
+</div>
+<main class="px-5 space-y-4">
+<div class="grid grid-cols-2 gap-3 mb-6">
+<div class="p-4 rounded-2xl bg-gradient-to-br from-purple-600 to-purple-800 text-white shadow-lg shadow-purple-900/20 relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-icons-round text-8xl">inventory_2</span>
+</div>
+<p class="text-purple-200 text-xs font-medium uppercase tracking-wider mb-1">Total Value</p>
+<h3 class="text-2xl font-display font-bold">$12,450</h3>
+<div class="flex items-center text-xs text-purple-200 mt-2">
+<span class="material-icons-round text-sm mr-1">trending_up</span> +2.4%
+                </div>
+</div>
+<div class="p-4 rounded-2xl bg-white dark:bg-surface-dark border border-purple-100 dark:border-purple-800 shadow-sm relative overflow-hidden">
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">Low Stock</p>
+<h3 class="text-2xl font-display font-bold text-red-500">4 Items</h3>
+<div class="flex items-center text-xs text-gray-400 mt-2">
+<span class="material-icons-round text-sm mr-1 text-yellow-500">warning</span> Action needed
+                </div>
+</div>
+</div>
+<div class="flex items-center justify-between mt-6 mb-2">
+<h2 class="text-lg font-bold text-gray-800 dark:text-gray-100">Product List</h2>
+<button class="text-xs font-medium text-primary dark:text-purple-300 flex items-center">
+                Sort by: Name <span class="material-icons-round text-base ml-0.5">expand_more</span>
+</button>
+</div>
+<div class="group relative bg-white dark:bg-surface-dark rounded-2xl p-3 shadow-sm border border-purple-100 dark:border-purple-800 hover:shadow-md transition-all duration-200 flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl bg-gray-100 dark:bg-gray-800 flex-shrink-0 overflow-hidden relative">
+<img alt="Salted Peanuts Pack" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjKBwV3VRQdFVZKB-5PPIMRpKL7BwdtsnUx28rtl9X5T7dWB_v5jsvaHc0P850Ah24DAPvgW9rIKjYKyooXejpF5ipQy1RaeBbjAgLZ8jpJB40jl1DpjPXOGeE2BhCyWqaG6TormvfU2Yh3tGXodGLVrsgunPlDzN32vbB8jQjrRmE6gCjaPZql4ZP3rSXhDBR8nUe9RwX4vjQ_X2JEotLBS04f5tMzqD8HZnwLmVzzjGjZL5msYM4tQ1HOP_iJtMTZFSjB17JnQ"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-base font-semibold text-gray-900 dark:text-white truncate">Salted Peanuts</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Snacks • 50g Pack</p>
+</div>
+<span class="px-2 py-1 rounded-md bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-bold">In Stock</span>
+</div>
+<div class="mt-2 flex items-end justify-between">
+<div>
+<p class="text-xs text-gray-400 uppercase">Stock</p>
+<p class="text-sm font-semibold text-gray-800 dark:text-gray-200">142 <span class="text-xs font-normal text-gray-400">units</span></p>
+</div>
+<div class="text-right">
+<p class="text-xs text-gray-400 uppercase">Cost</p>
+<p class="text-sm font-bold text-primary dark:text-purple-300">$0.45</p>
+</div>
+</div>
+</div>
+</div>
+<div class="group relative bg-white dark:bg-surface-dark rounded-2xl p-3 shadow-sm border border-purple-100 dark:border-purple-800 hover:shadow-md transition-all duration-200 flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl bg-gray-100 dark:bg-gray-800 flex-shrink-0 overflow-hidden relative">
+<img alt="Potato Chips" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsvVrIRi3M2vBmI5SNQEn6lm6skuVE_Cxxzl3N_AdDhgI8hQnJ64nkTPnrEgrA8CnN4W8w-FYWMwVKOgSRh5fM0KGcMuz1KiEVaxf1DrZ7vP-26CjbYIgSsYjfyGgwjyRRtmsf3i7VNYfL91IovcBZZZCAMr5z-kHi1KvWUt8xDawpi_pL6JUkZtOyeYHsuyvhGAWuF8PvFbJLfpvh5CIW6_KKMUpzP2yuxsE1VgVpcrMaSv6wWVPD35lp71OGJN_ex_4x2SAUNw"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-base font-semibold text-gray-900 dark:text-white truncate">Classic Chips</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Snacks • Family Size</p>
+</div>
+<span class="px-2 py-1 rounded-md bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 text-xs font-bold">Low Stock</span>
+</div>
+<div class="mt-2 flex items-end justify-between">
+<div>
+<p class="text-xs text-gray-400 uppercase">Stock</p>
+<p class="text-sm font-semibold text-gray-800 dark:text-gray-200">12 <span class="text-xs font-normal text-gray-400">units</span></p>
+</div>
+<div class="text-right">
+<p class="text-xs text-gray-400 uppercase">Cost</p>
+<p class="text-sm font-bold text-primary dark:text-purple-300">$1.20</p>
+</div>
+</div>
+</div>
+</div>
+<div class="group relative bg-white dark:bg-surface-dark rounded-2xl p-3 shadow-sm border border-purple-100 dark:border-purple-800 hover:shadow-md transition-all duration-200 flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl bg-gray-100 dark:bg-gray-800 flex-shrink-0 overflow-hidden relative">
+<img alt="Chocolate Bar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNDi54uVgRON8Td8urOP9Dg8P3AoNnAhysmE4Sh71qbCyE3mXVTWg7-SqQFOq17kcIpgt11F8x2iYRCArQ6ve-UvAQww6sQ-wtYFvvQy590iKl8mSjeXpk2hK5USuN4o2y_osyDjbfi2j5IZZ5-ITfmafRSAfdePb9w3435c_K8NPyx_pc40L_8VVGC--dfQsL45fdvvd3743MOXvPH6BpaL8zZbYLdXVKf5Ww0s4dnNjAtBqfcyPYGsleE4iAMXOv7F2K-Xckvg"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-base font-semibold text-gray-900 dark:text-white truncate">Dark Chocolate</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Confectionery • 70% Cocoa</p>
+</div>
+<span class="px-2 py-1 rounded-md bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-bold">In Stock</span>
+</div>
+<div class="mt-2 flex items-end justify-between">
+<div>
+<p class="text-xs text-gray-400 uppercase">Stock</p>
+<p class="text-sm font-semibold text-gray-800 dark:text-gray-200">85 <span class="text-xs font-normal text-gray-400">units</span></p>
+</div>
+<div class="text-right">
+<p class="text-xs text-gray-400 uppercase">Cost</p>
+<p class="text-sm font-bold text-primary dark:text-purple-300">$2.50</p>
+</div>
+</div>
+</div>
+</div>
+<div class="group relative bg-white dark:bg-surface-dark rounded-2xl p-3 shadow-sm border border-purple-100 dark:border-purple-800 hover:shadow-md transition-all duration-200 flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl bg-gray-100 dark:bg-gray-800 flex-shrink-0 overflow-hidden relative">
+<img alt="Cola Can" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA901NLXefYekR4Dh4zV5FoKa_iN8jDJgCIwCeAFVlloKRe6cgMdMnezhO1y3CmajEMKaY3xqGRdC0uvRbTUVA1xnHqm_9q6anf8qIUN6Jt9yupNd1CFyNQvfqRjl6FKILBafcVd-FvZo8swNfvJbtwsLN1DWq5_bSLd83u1g4xgXADOz9_200ZskVE5WbNXuVghdl4kgxV408TmLa6By3P76Gj5dRbvO1cnmlevmeqNunp-HXcN-RF7cL576knEj7ytBdyW8XvfA"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-base font-semibold text-gray-900 dark:text-white truncate">Cola Classic</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Beverages • 330ml Can</p>
+</div>
+<span class="px-2 py-1 rounded-md bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-xs font-bold">Out of Stock</span>
+</div>
+<div class="mt-2 flex items-end justify-between">
+<div>
+<p class="text-xs text-gray-400 uppercase">Stock</p>
+<p class="text-sm font-semibold text-gray-800 dark:text-gray-200">0 <span class="text-xs font-normal text-gray-400">units</span></p>
+</div>
+<div class="text-right">
+<p class="text-xs text-gray-400 uppercase">Cost</p>
+<p class="text-sm font-bold text-primary dark:text-purple-300">$0.80</p>
+</div>
+</div>
+</div>
+</div>
+<div class="group relative bg-white dark:bg-surface-dark rounded-2xl p-3 shadow-sm border border-purple-100 dark:border-purple-800 hover:shadow-md transition-all duration-200 flex items-center gap-4">
+<div class="w-16 h-16 rounded-xl bg-gray-100 dark:bg-gray-800 flex-shrink-0 overflow-hidden relative">
+<img alt="Gummy Bears" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlhHK9yJ3bXxVmnNlOAQGH0-FFMYz0pe0LdF_iPmxnYVDzreVipPXxjXEd-weMwrwOx780mLjgEjPo61IcIv0C4-AM1xcaJ_O0PEKtE_qMwoHkEAZFjz4lTJNFSw7Bc5qLE3I0juYjKbXMw1LvOifvy8200OR2YBmnE-lmk1P6DLUmnpw1Xsy-gO4i6R2-ZTWJfGlLguBLsgV-SYIIIQ5E67MM3YTkjIeo-v3FJKOnQ9KKd4yiErtyu2RQVaOnyncIjKrrAX8jTg"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-base font-semibold text-gray-900 dark:text-white truncate">Gummy Bears</h3>
+<p class="text-xs text-gray-500 dark:text-gray-400">Candy • 100g Bag</p>
+</div>
+<span class="px-2 py-1 rounded-md bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-bold">In Stock</span>
+</div>
+<div class="mt-2 flex items-end justify-between">
+<div>
+<p class="text-xs text-gray-400 uppercase">Stock</p>
+<p class="text-sm font-semibold text-gray-800 dark:text-gray-200">200 <span class="text-xs font-normal text-gray-400">units</span></p>
+</div>
+<div class="text-right">
+<p class="text-xs text-gray-400 uppercase">Cost</p>
+<p class="text-sm font-bold text-primary dark:text-purple-300">$1.10</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<button class="fixed bottom-24 right-5 w-14 h-14 rounded-full bg-silver-metallic shadow-lg shadow-black/30 hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center z-50 border border-white/50">
+<span class="material-icons-round text-gray-800 text-3xl font-bold">add</span>
+</button>
+<nav class="fixed bottom-0 w-full bg-white/90 dark:bg-[#150421]/95 backdrop-blur-lg border-t border-purple-200 dark:border-purple-900 pb-5 pt-3 z-40 px-6">
+<ul class="flex justify-between items-center">
+<li class="flex flex-col items-center">
+<a class="flex flex-col items-center group" href="#">
+<span class="material-icons-round text-primary dark:text-purple-400 text-2xl mb-1 group-hover:scale-110 transition-transform">inventory_2</span>
+<span class="text-[10px] font-medium text-primary dark:text-purple-400">Inventory</span>
+</a>
+</li>
+<li class="flex flex-col items-center">
+<a class="flex flex-col items-center group" href="#">
+<span class="material-icons-round text-gray-400 dark:text-gray-500 text-2xl mb-1 group-hover:text-purple-500 transition-colors">shopping_cart</span>
+<span class="text-[10px] font-medium text-gray-400 dark:text-gray-500 group-hover:text-purple-500 transition-colors">Orders</span>
+</a>
+</li>
+<li class="flex flex-col items-center">
+<a class="flex flex-col items-center group" href="#">
+<span class="material-icons-round text-gray-400 dark:text-gray-500 text-2xl mb-1 group-hover:text-purple-500 transition-colors">analytics</span>
+<span class="text-[10px] font-medium text-gray-400 dark:text-gray-500 group-hover:text-purple-500 transition-colors">Reports</span>
+</a>
+</li>
+<li class="flex flex-col items-center">
+<a class="flex flex-col items-center group" href="#">
+<span class="material-icons-round text-gray-400 dark:text-gray-500 text-2xl mb-1 group-hover:text-purple-500 transition-colors">settings</span>
+<span class="text-[10px] font-medium text-gray-400 dark:text-gray-500 group-hover:text-purple-500 transition-colors">Settings</span>
+</a>
+</li>
+</ul>
+</nav>
+
+</body></html>

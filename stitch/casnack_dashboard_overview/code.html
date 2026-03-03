@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CASNACK Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Orbitron:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#590099", // Deep Purple from Logo
+                        "primary-light": "#7e22ce",
+                        "primary-dark": "#3b0764",
+                        "background-light": "#f3f4f6", // Light gray for light mode
+                        "background-dark": "#1a0b2e", // Very dark purple/black for dark mode
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#2e1065", // Darker purple for cards
+                        "silver": "#e5e7eb", // Metallic silver accent simulation
+                        "silver-text": "#cbd5e1",
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                        display: ["Orbitron", "sans-serif"], // Tech/Casino vibe
+                    },
+                    boxShadow: {
+                        'neon': '0 0 10px rgba(139, 92, 246, 0.5)',
+                        'metallic': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.1)',
+                    },
+                    backgroundImage: {
+                        'purple-gradient': 'linear-gradient(135deg, #4c1d95 0%, #2e1065 100%)',
+                        'silver-gradient': 'linear-gradient(180deg, #f3f4f6 0%, #d1d5db 100%)',
+                        'metallic-text': 'linear-gradient(180deg, #ffffff 0%, #9ca3af 100%)',
+                    }
+                },
+            },
+        };
+    </script>
+<style>::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4c1d95; 
+            border-radius: 3px;
+        }
+        .metallic-text {
+            background: linear-gradient(to bottom, #f8fafc 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 1px 2px rgba(0,0,0,0.3);
+        }
+        .dark .metallic-text {
+            background: linear-gradient(to bottom, #ffffff 20%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-100 min-h-screen font-sans transition-colors duration-300">
+<div class="max-w-md mx-auto min-h-screen relative shadow-2xl overflow-hidden bg-background-light dark:bg-background-dark">
+<header class="pt-12 pb-6 px-6 flex justify-between items-center bg-white dark:bg-opacity-0 relative z-10">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-dark shadow-neon flex items-center justify-center text-white font-display font-bold text-lg border border-white/20">
+                    C
+                </div>
+<div>
+<h1 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Dashboard</h1>
+<span class="font-display font-bold text-xl text-primary dark:text-white tracking-wide">CASNACK</span>
+</div>
+</div>
+<button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition">
+<span class="material-icons-round text-gray-600 dark:text-gray-300">notifications</span>
+</button>
+</header>
+<main class="px-6 pb-24 space-y-6">
+<div class="relative overflow-hidden rounded-3xl p-6 shadow-lg group">
+<div class="absolute inset-0 bg-primary dark:bg-gradient-to-br dark:from-primary-light dark:to-primary-dark transition-all duration-500"></div>
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/20 to-transparent opacity-30"></div>
+<div class="relative z-10 text-white">
+<div class="flex justify-between items-start mb-6">
+<div>
+<p class="text-primary-100 text-sm font-medium mb-1">Welcome back,</p>
+<h2 class="text-2xl font-bold font-display metallic-text">Manager Dave</h2>
+</div>
+<div class="bg-white/20 backdrop-blur-md rounded-lg px-3 py-1 text-xs font-semibold border border-white/10">
+                            Live
+                        </div>
+</div>
+<div class="grid grid-cols-2 gap-4 divide-x divide-white/20">
+<div class="pr-2">
+<p class="text-xs text-indigo-100 uppercase tracking-wider mb-1">Total Stock</p>
+<p class="text-2xl font-bold font-display">14,250</p>
+<p class="text-[10px] text-green-300 flex items-center gap-1 mt-1">
+<span class="material-icons-round text-[10px]">arrow_upward</span> +5.2%
+                            </p>
+</div>
+<div class="pl-4">
+<p class="text-xs text-indigo-100 uppercase tracking-wider mb-1">Inventory Value</p>
+<p class="text-2xl font-bold font-display">$42.8k</p>
+<p class="text-[10px] text-indigo-200 mt-1">Updated 2m ago</p>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="col-span-2 bg-white dark:bg-surface-dark rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-white/5">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-semibold text-gray-800 dark:text-white flex items-center gap-2">
+<span class="material-icons-round text-primary text-lg">local_shipping</span>
+                            Most Delivered
+                        </h3>
+<span class="text-xs text-gray-400">This Week</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-500/20 flex items-center justify-center text-orange-600 dark:text-orange-300">
+<span class="material-icons-round text-sm">cookie</span>
+</div>
+<div>
+<p class="text-sm font-medium text-gray-700 dark:text-gray-200">Pretzels Mix</p>
+<p class="text-xs text-gray-400">2,400 units</p>
+</div>
+</div>
+<span class="text-sm font-bold text-gray-800 dark:text-white">32%</span>
+</div>
+<div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 65%"></div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-surface-dark rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/5 flex flex-col justify-between">
+<div class="mb-3">
+<span class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center mb-2">
+<span class="material-icons-round text-blue-600 dark:text-blue-400 text-sm">casino</span>
+</span>
+<h3 class="text-sm font-semibold text-gray-700 dark:text-gray-200">Top Casino</h3>
+<p class="text-xs text-gray-400 mt-1">Highest consumption</p>
+</div>
+<div>
+<p class="text-lg font-bold text-gray-800 dark:text-white font-display">Grand Royal</p>
+<p class="text-xs text-green-500 font-medium">+12% vs avg</p>
+</div>
+</div>
+<div class="bg-red-50 dark:bg-red-900/20 rounded-2xl p-4 shadow-sm border border-red-100 dark:border-red-500/20 flex flex-col justify-between">
+<div class="mb-3">
+<span class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-500/20 flex items-center justify-center mb-2">
+<span class="material-icons-round text-red-600 dark:text-red-400 text-sm">warning</span>
+</span>
+<h3 class="text-sm font-semibold text-red-800 dark:text-red-200">Low Stock</h3>
+<p class="text-xs text-red-600 dark:text-red-300 mt-1">3 Items Critical</p>
+</div>
+<button class="text-xs bg-white dark:bg-red-500/20 text-red-600 dark:text-red-200 py-1.5 px-3 rounded-lg font-medium shadow-sm border border-red-100 dark:border-transparent">
+                        View Alerts
+                    </button>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-4 px-1">
+<h3 class="text-lg font-bold text-gray-800 dark:text-white">Recent Deliveries</h3>
+<a class="text-xs text-primary dark:text-primary-light font-medium hover:underline" href="#">View All</a>
+</div>
+<div class="space-y-3">
+<div class="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400">
+<span class="material-icons-round">local_shipping</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-gray-800 dark:text-white">Bellagio Resort</p>
+<p class="text-xs text-gray-400">Order #8832 • Mixed Nuts</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold text-gray-800 dark:text-white">250 qty</p>
+<p class="text-[10px] text-gray-400">10m ago</p>
+</div>
+</div>
+<div class="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400">
+<span class="material-icons-round">local_shipping</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-gray-800 dark:text-white">Caesars Palace</p>
+<p class="text-xs text-gray-400">Order #8831 • Chips Variety</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold text-gray-800 dark:text-white">500 qty</p>
+<p class="text-[10px] text-gray-400">1h ago</p>
+</div>
+</div>
+<div class="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/10 flex items-center justify-center text-green-600 dark:text-green-400">
+<span class="material-icons-round">check_circle</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-gray-800 dark:text-white">MGM Grand</p>
+<p class="text-xs text-gray-400">Order #8830 • Dried Fruits</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-bold text-gray-800 dark:text-white">120 qty</p>
+<p class="text-[10px] text-gray-400">2h ago</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<nav class="absolute bottom-0 w-full bg-white dark:bg-[#150525] border-t border-gray-200 dark:border-white/5 px-6 py-4">
+<div class="flex justify-between items-center text-gray-400 dark:text-gray-500">
+<button class="flex flex-col items-center gap-1 text-primary dark:text-primary-light">
+<span class="material-icons-round text-2xl">dashboard</span>
+<span class="text-[10px] font-medium">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 hover:text-primary dark:hover:text-primary-light transition">
+<span class="material-icons-round text-2xl">inventory_2</span>
+<span class="text-[10px] font-medium">Stock</span>
+</button>
+<div class="relative -top-8">
+<button class="w-14 h-14 rounded-full bg-gradient-to-r from-primary to-purple-600 shadow-lg shadow-purple-500/40 border-4 border-white dark:border-background-dark flex items-center justify-center text-white transform hover:scale-105 transition">
+<span class="material-icons-round text-3xl">add</span>
+</button>
+</div>
+<button class="flex flex-col items-center gap-1 hover:text-primary dark:hover:text-primary-light transition">
+<span class="material-icons-round text-2xl">local_shipping</span>
+<span class="text-[10px] font-medium">Delivery</span>
+</button>
+<button class="flex flex-col items-center gap-1 hover:text-primary dark:hover:text-primary-light transition">
+<span class="material-icons-round text-2xl">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</button>
+</div>
+</nav>
+</div>
+<div class="fixed bottom-4 right-4 z-50">
+<button class="bg-gray-800 dark:bg-white text-white dark:text-gray-900 px-4 py-2 rounded-full shadow-lg font-medium text-sm transition-all hover:scale-105" onclick="document.documentElement.classList.toggle('dark')">
+            Toggle Theme
+        </button>
+</div>
+
+</body></html>

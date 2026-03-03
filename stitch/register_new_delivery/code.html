@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CASNACK - Register New Delivery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#6A0dad", // Deep purple from the logo
+                        "primary-dark": "#4B0082",
+                        "accent-metallic": "#D1D5DB", // Silver metallic accent
+                        "background-light": "#F3F4F6",
+                        "background-dark": "#1a1025", // Very dark purple/black
+                        "card-light": "#FFFFFF",
+                        "card-dark": "#2D1B42", // Slightly lighter purple for cards
+                        "input-bg-dark": "#3d2657",
+                        "input-border-dark": "#563a75",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                        body: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem",
+                        'xl': '1rem',
+                        '2xl': '1.5rem',
+                    },
+                },
+            },
+        };
+    </script>
+<style>.btn-metallic {
+            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 50%, #4c1d95 100%);
+            box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.5), 0 2px 4px -1px rgba(124, 58, 237, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-metallic:active {
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+        }.hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-body text-gray-800 dark:text-gray-100 min-h-screen flex justify-center selection:bg-primary selection:text-white transition-colors duration-200">
+<div class="w-full max-w-md bg-background-light dark:bg-background-dark min-h-screen relative shadow-2xl overflow-hidden flex flex-col">
+<div class="h-12 w-full flex justify-between items-center px-6 pt-2 z-20">
+<span class="text-xs font-semibold dark:text-white">9:41</span>
+<div class="flex gap-1.5 items-center">
+<span class="material-icons text-sm dark:text-white">signal_cellular_alt</span>
+<span class="material-icons text-sm dark:text-white">wifi</span>
+<span class="material-icons text-sm dark:text-white">battery_full</span>
+</div>
+</div>
+<div class="px-6 pb-6 pt-2 flex items-center justify-between z-10">
+<button class="p-2 -ml-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors text-gray-600 dark:text-gray-300">
+<span class="material-icons">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold tracking-wide uppercase text-gray-800 dark:text-white">New Delivery</h1>
+<div class="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-400 border border-white flex items-center justify-center overflow-hidden shadow-sm">
+<span class="text-xs font-bold text-gray-600">CN</span>
+</div>
+</div>
+<div class="absolute top-[-10%] right-[-10%] w-64 h-64 bg-primary opacity-10 blur-3xl rounded-full pointer-events-none"></div>
+<div class="absolute bottom-[10%] left-[-10%] w-48 h-48 bg-primary opacity-5 blur-3xl rounded-full pointer-events-none"></div>
+<div class="flex-1 overflow-y-auto hide-scrollbar px-6 pb-24">
+<form action="#" class="space-y-6">
+<div class="flex items-center gap-2 mb-6">
+<div class="h-1 flex-1 bg-primary rounded-full"></div>
+<div class="h-1 flex-1 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+</div>
+<div class="group">
+<label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 pl-1" for="casino">Casino Location</label>
+<div class="relative">
+<span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">casino</span>
+<select class="w-full pl-12 pr-4 py-4 bg-white dark:bg-input-bg-dark border border-gray-200 dark:border-input-border-dark rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none shadow-sm text-gray-900 dark:text-white appearance-none transition-all" id="casino" name="casino">
+<option disabled="" selected="" value="">Select a location</option>
+<option value="bellagio">The Royal Chip Casino</option>
+<option value="caesars">Golden Spade Resort</option>
+<option value="venetian">Silver Dice Lounge</option>
+</select>
+<span class="material-icons absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">expand_more</span>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2 pl-1">
+<label class="text-sm font-medium text-gray-600 dark:text-gray-300">Inventory Items</label>
+<button class="text-xs font-semibold text-primary hover:text-primary-dark transition-colors" type="button">
+                            + Add Custom
+                        </button>
+</div>
+<div class="bg-white dark:bg-card-dark rounded-xl border border-gray-200 dark:border-input-border-dark p-4 shadow-sm space-y-4">
+<div class="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-white/5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-white/5 flex items-center justify-center text-indigo-500 dark:text-indigo-300">
+<span class="material-icons text-lg">liquor</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-gray-800 dark:text-gray-100">Premium Whiskey</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Unit: Bottle (750ml)</p>
+</div>
+</div>
+<div class="flex items-center gap-3 bg-gray-50 dark:bg-black/20 rounded-lg p-1">
+<button class="w-7 h-7 flex items-center justify-center rounded bg-white dark:bg-input-bg-dark shadow-sm text-gray-600 dark:text-gray-300 hover:text-primary active:scale-95 transition-transform" type="button">
+<span class="material-icons text-xs">remove</span>
+</button>
+<span class="text-sm font-bold w-4 text-center dark:text-white">12</span>
+<button class="w-7 h-7 flex items-center justify-center rounded bg-white dark:bg-input-bg-dark shadow-sm text-primary active:scale-95 transition-transform" type="button">
+<span class="material-icons text-xs">add</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-white/5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-orange-50 dark:bg-white/5 flex items-center justify-center text-orange-500 dark:text-orange-300">
+<span class="material-icons text-lg">tapas</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-gray-800 dark:text-gray-100">Mixed Nuts Pack</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Unit: Box (24pk)</p>
+</div>
+</div>
+<div class="flex items-center gap-3 bg-gray-50 dark:bg-black/20 rounded-lg p-1">
+<button class="w-7 h-7 flex items-center justify-center rounded bg-white dark:bg-input-bg-dark shadow-sm text-gray-600 dark:text-gray-300 hover:text-primary active:scale-95 transition-transform" type="button">
+<span class="material-icons text-xs">remove</span>
+</button>
+<span class="text-sm font-bold w-4 text-center dark:text-white">5</span>
+<button class="w-7 h-7 flex items-center justify-center rounded bg-white dark:bg-input-bg-dark shadow-sm text-primary active:scale-95 transition-transform" type="button">
+<span class="material-icons text-xs">add</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-green-50 dark:bg-white/5 flex items-center justify-center text-green-500 dark:text-green-300">
+<span class="material-icons text-lg">local_drink</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-gray-800 dark:text-gray-100">Sparkling Water</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Unit: Case (12btl)</p>
+</div>
+</div>
+<div class="flex items-center gap-3 bg-gray-50 dark:bg-black/20 rounded-lg p-1">
+<button class="w-7 h-7 flex items-center justify-center rounded bg-white dark:bg-input-bg-dark shadow-sm text-gray-600 dark:text-gray-300 hover:text-primary active:scale-95 transition-transform" type="button">
+<span class="material-icons text-xs">remove</span>
+</button>
+<span class="text-sm font-bold w-4 text-center dark:text-white">0</span>
+<button class="w-7 h-7 flex items-center justify-center rounded bg-white dark:bg-input-bg-dark shadow-sm text-gray-600 dark:text-gray-300 hover:text-primary active:scale-95 transition-transform" type="button">
+<span class="material-icons text-xs">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="group">
+<label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 pl-1">Date</label>
+<div class="relative">
+<input class="w-full pl-10 pr-3 py-3.5 bg-white dark:bg-input-bg-dark border border-gray-200 dark:border-input-border-dark rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none shadow-sm text-gray-900 dark:text-white text-sm" type="date" value="2023-10-27"/>
+<span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none">calendar_today</span>
+</div>
+</div>
+<div class="group">
+<label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 pl-1">Time</label>
+<div class="relative">
+<input class="w-full pl-10 pr-3 py-3.5 bg-white dark:bg-input-bg-dark border border-gray-200 dark:border-input-border-dark rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none shadow-sm text-gray-900 dark:text-white text-sm" type="time" value="14:30"/>
+<span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none">schedule</span>
+</div>
+</div>
+</div>
+<div class="group">
+<label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 pl-1">Received By</label>
+<div class="relative">
+<span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">badge</span>
+<input class="w-full pl-12 pr-4 py-4 bg-white dark:bg-input-bg-dark border border-gray-200 dark:border-input-border-dark rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none shadow-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500" placeholder="Enter employee ID or name" type="text"/>
+</div>
+</div>
+<div class="group">
+<label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 pl-1">Observations</label>
+<textarea class="w-full p-4 bg-white dark:bg-input-bg-dark border border-gray-200 dark:border-input-border-dark rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none shadow-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 resize-none" placeholder="Any damage or discrepancies?" rows="3"></textarea>
+</div>
+</form>
+</div>
+<div class="absolute bottom-0 w-full bg-background-light dark:bg-background-dark/95 backdrop-blur-lg border-t border-gray-200 dark:border-white/5 p-6 z-20">
+<button class="w-full btn-metallic text-white font-bold py-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transform active:scale-[0.98] transition-all">
+<span class="material-icons">check_circle</span>
+                CONFIRM DELIVERY
+            </button>
+</div>
+</div>
+
+</body></html>
