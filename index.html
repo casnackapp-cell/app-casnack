@@ -5,9 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CASNACK Dashboard</title>
-    <!-- Favicon and App Icons -->
-    <link rel="icon" type="image/png" href="LOGO%20CASNACK.png">
-    <link rel="apple-touch-icon" href="LOGO%20CASNACK.png">
+    <link rel="icon" type="image/png" href="LOGO%20CASNACK.png?v=2">
+    <link rel="apple-touch-icon" href="LOGO%20CASNACK.png?v=2">
     <meta name="theme-color" content="#2e1065">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,20 +15,22 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;800&display=swap"
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=4">
 </head>
 
-<body class="dark-mode"> <!-- Starting in Dark Mode for Premium Feel -->
+<body class="dark-mode">
     <div class="app-container">
 
         <!-- Sidebar for PC Navigation -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="logo-wrapper">
-                    <img src="LOGO%20CASNACK.png" alt="CASNACK Logo" class="app-logo">
+                    <img src="LOGO%20CASNACK.png?v=2" alt="CASNACK Logo" class="app-logo">
                 </div>
-                <!-- Desktop brand text -->
                 <div class="brand">
                     <span class="brand-subtitle">DASHBOARD</span>
                     <span class="brand-title">CASNACK</span>
@@ -41,6 +42,12 @@
                         <span class="material-icons-round">dashboard</span>
                     </div>
                     <span class="nav-label">Inicio</span>
+                </button>
+                <button class="nav-btn" data-target="delivery">
+                    <div class="nav-icon-wrapper">
+                        <span class="material-icons-round">local_shipping</span>
+                    </div>
+                    <span class="nav-label">Entregas</span>
                 </button>
                 <button class="nav-btn" data-target="snacks">
                     <div class="nav-icon-wrapper">
@@ -54,11 +61,11 @@
                     </div>
                     <span class="nav-label">Casinos</span>
                 </button>
-                <button class="nav-btn" data-target="delivery">
+                <button class="nav-btn" data-target="contactos">
                     <div class="nav-icon-wrapper">
-                        <span class="material-icons-round">local_shipping</span>
+                        <span class="material-icons-round">contacts</span>
                     </div>
-                    <span class="nav-label">Entregas</span>
+                    <span class="nav-label">Contactos</span>
                 </button>
                 <button class="nav-btn" data-target="reports">
                     <div class="nav-icon-wrapper">
@@ -77,196 +84,110 @@
 
         <!-- Main Content Area -->
         <main class="main-content">
-            <!-- Top Header -->
             <header class="top-header">
-                <!-- Mobile brand (hidden on PC) -->
                 <div class="mobile-brand">
                     <div class="mobile-logo-wrapper">
-                        <img src="LOGO%20CASNACK.png" alt="Logo" class="mobile-logo">
+                        <img src="LOGO%20CASNACK.png?v=2" alt="Logo" class="mobile-logo">
                     </div>
                     <div class="brand">
                         <span class="brand-subtitle">DASHBOARD</span>
                         <span class="brand-title">CASNACK</span>
                     </div>
                 </div>
-                <!-- Context title for PC -->
                 <h1 class="pc-page-title" id="pc-page-title">Inicio</h1>
-
                 <div class="header-actions">
                     <button class="icon-btn theme-toggle" id="theme-toggle-mobile">
                         <span class="material-icons-round theme-icon">light_mode</span>
                     </button>
-                    <button class="icon-btn notification-btn">
-                        <span class="material-icons-round">notifications</span>
-                        <span class="notification-dot"></span>
-                    </button>
                 </div>
             </header>
 
-            <!-- Page Views Container -->
             <div class="page-views">
 
-                <!-- Dashboard View -->
+                <!-- ==================== DASHBOARD ==================== -->
                 <section id="dashboard" class="page-view active">
 
-                    <!-- Welcome Hero -->
-                    <div class="dashboard-hero">
-                        <div class="welcome-text">
-                            <p class="subtitle">Bienvenido de nuevo,</p>
-                            <h2 class="title metallic-text">Manager Dave</h2>
-                        </div>
-                        <div class="status-badge">
-                            <span class="status-dot live"></span> En Vivo
-                        </div>
-                    </div>
-
-                    <!-- Main Stat Card -->
-                    <div class="glass-card stat-card primary-gradient">
-                        <div class="stat-content">
-                            <div class="stat-block">
-                                <p class="stat-label">Stock Total</p>
-                                <p class="stat-value font-display">14,250</p>
-                                <p class="stat-trend positive">
-                                    <span class="material-icons-round">arrow_upward</span> +5.2%
-                                </p>
-                            </div>
-                            <div class="divider"></div>
-                            <div class="stat-block">
-                                <p class="stat-label">Valor Inventario</p>
-                                <p class="stat-value font-display">$42.8k</p>
-                                <p class="stat-update">Actualizado hace 2m</p>
-                            </div>
-                        </div>
-                        <div class="card-glow"></div>
-                    </div>
-
-                    <!-- Layout grid for PC vs Mobile -->
-                    <div class="dashboard-grid">
-                        <!-- Widget 1: Most Delivered -->
-                        <div class="glass-card widget widget-full">
-                            <div class="widget-header">
-                                <h3 class="widget-title">
-                                    <span class="icon-primary"><span
-                                            class="material-icons-round">local_shipping</span></span>
-                                    Más Entregados
-                                </h3>
-                                <span class="widget-subtitle">Esta semana</span>
-                            </div>
-                            <div class="widget-body">
-                                <div class="progress-item">
-                                    <div class="item-info">
-                                        <div class="item-icon bg-orange">
-                                            <span class="material-icons-round text-orange">cookie</span>
-                                        </div>
-                                        <div>
-                                            <p class="item-title">Pretzels Mix</p>
-                                            <p class="item-desc">2,400 unidades</p>
-                                        </div>
-                                    </div>
-                                    <span class="item-percent font-display">32%</span>
+                    <!-- No active week -->
+                    <div id="dashboard-no-week">
+                        <div class="glass-card welcome-card-hero mt-xl">
+                            <div class="welcome-hero-content">
+                                <div class="welcome-icon-wrap ripple-effect">
+                                    <span class="material-icons-round welcome-icon">rocket_launch</span>
                                 </div>
-                                <div class="progress-bar-bg">
-                                    <div class="progress-bar-fill orange-glow" style="width: 32%"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Widget 2: Top Casino -->
-                        <div class="glass-card widget widget-half flex-col">
-                            <div>
-                                <div class="item-icon bg-blue mb-small">
-                                    <span class="material-icons-round text-blue">casino</span>
-                                </div>
-                                <h3 class="widget-title">Top Casino</h3>
-                                <p class="item-desc">Mayor consumo</p>
-                            </div>
-                            <div class="widget-footer mt-large">
-                                <p class="big-value font-display">Grand Royal</p>
-                                <p class="trend-text positive mt-small">+12% vs prom</p>
-                            </div>
-                        </div>
-
-                        <!-- Widget 3: Alerts -->
-                        <div class="glass-card widget widget-half alert-widget flex-col">
-                            <div>
-                                <div class="item-icon bg-red mb-small">
-                                    <span class="material-icons-round text-red">warning</span>
-                                </div>
-                                <h3 class="widget-title text-red-bold">Stock Bajo</h3>
-                                <p class="item-desc text-red-light">3 Ítems Críticos</p>
-                            </div>
-                            <div class="widget-footer mt-large">
-                                <button class="btn-outline-red w-full">Ver Alertas</button>
+                                <h2 class="welcome-title metallic-text">¡Bienvenido de nuevo, Julián! 👋</h2>
+                                <p class="welcome-desc">Es hora de organizar una nueva y excelente semana de entregas.
+                                    Configura los 5 snacks estrella para empezar.</p>
+                                <button class="btn-primary btn-lg welcome-btn" id="btn-config-semana">
+                                    <span class="material-icons-round">playlist_add_check</span> Iniciar Configuración
+                                </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Recent Section -->
-                    <div class="recent-section mt-xl">
-                        <div class="section-header">
-                            <h3 class="section-title">Entregas Recientes</h3>
-                            <a href="#" class="link-primary">Ver Todas</a>
+                    <!-- Active week dashboard -->
+                    <div id="dashboard-active" style="display:none;">
+                        <div class="dashboard-grid mt-small">
+                            <div class="glass-card stat-card">
+                                <div class="stat-icon bg-blue"><span class="material-icons-round">date_range</span>
+                                </div>
+                                <div class="stat-info">
+                                    <p class="stat-label">Semana Actual</p>
+                                    <p class="stat-value" id="dash-semana-label">--</p>
+                                    <p class="text-muted mt-small" id="dash-semana-dates"
+                                        style="font-size:0.75rem; display:none;"></p>
+                                </div>
+                            </div>
+                            <div class="glass-card stat-card">
+                                <div class="stat-icon bg-orange"><span
+                                        class="material-icons-round">local_shipping</span></div>
+                                <div class="stat-info">
+                                    <p class="stat-label">Entregas</p>
+                                    <p class="stat-value" id="dash-entregas-label">0 / 0</p>
+                                </div>
+                            </div>
+                            <div class="glass-card stat-card">
+                                <div class="stat-icon bg-green"><span class="material-icons-round">attach_money</span>
+                                </div>
+                                <div class="stat-info">
+                                    <p class="stat-label">Total Semana</p>
+                                    <p class="stat-value" id="dash-total-label">$0</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="list-container">
-                            <div class="glass-card list-item interactive">
-                                <div class="item-info">
-                                    <div class="icon-circle bg-gray"><span
-                                            class="material-icons-round">local_shipping</span></div>
-                                    <div>
-                                        <p class="item-title">Bellagio Resort</p>
-                                        <p class="item-desc">Orden #8832 • Mixed Nuts</p>
-                                    </div>
-                                </div>
-                                <div class="item-trailing">
-                                    <p class="item-title text-right">250 uds</p>
-                                    <p class="item-desc text-right">10m atrás</p>
-                                </div>
-                            </div>
-                            <div class="glass-card list-item interactive">
-                                <div class="item-info">
-                                    <div class="icon-circle bg-gray"><span
-                                            class="material-icons-round">local_shipping</span></div>
-                                    <div>
-                                        <p class="item-title">Caesars Palace</p>
-                                        <p class="item-desc">Orden #8831 • Chips Variety</p>
-                                    </div>
-                                </div>
-                                <div class="item-trailing">
-                                    <p class="item-title text-right">500 uds</p>
-                                    <p class="item-desc text-right">1h atrás</p>
-                                </div>
-                            </div>
-                            <div class="glass-card list-item interactive">
-                                <div class="item-info">
-                                    <div class="icon-circle bg-green"><span
-                                            class="material-icons-round text-green">check_circle</span></div>
-                                    <div>
-                                        <p class="item-title">MGM Grand</p>
-                                        <p class="item-desc">Orden #8830 • Dried Fruits</p>
-                                    </div>
-                                </div>
-                                <div class="item-trailing">
-                                    <p class="item-title text-right">120 uds</p>
-                                    <p class="item-desc text-right">2h atrás</p>
-                                </div>
-                            </div>
+
+                        <div class="glass-card mt-xl" style="padding: 20px;">
+                            <h3 class="mb-small font-bold">🍿 Snacks de la Semana</h3>
+                            <div id="dash-snacks-list" class="dash-snacks-grid"></div>
+                        </div>
+
+                        <div class="dashboard-actions mt-xl">
+                            <button class="btn-outline btn-lg" id="btn-cambiar-snacks" style="display:none;">
+                                <span class="material-icons-round">swap_horiz</span> Cambiar Snacks
+                            </button>
+                            <button class="btn-primary btn-lg" id="btn-ir-entregas">
+                                <span class="material-icons-round">local_shipping</span> Ir a Entregas
+                            </button>
+                            <button class="btn-primary btn-lg btn-success" id="btn-factura-semanal"
+                                style="display:none;">
+                                <span class="material-icons-round">receipt_long</span> Generar Cuenta de Cobro
+                            </button>
+                            <button class="btn-primary btn-lg btn-warning" id="btn-nueva-semana" style="display:none;">
+                                <span class="material-icons-round">restart_alt</span> Iniciar Nueva Semana
+                            </button>
                         </div>
                     </div>
                 </section>
 
-                <!-- Casinos View -->
+                <!-- ==================== CASINOS ==================== -->
                 <section id="casinos" class="page-view">
                     <div class="section-header mt-small">
                         <h2 class="title metallic-text">Gestión de Casinos</h2>
-                        <button class="btn-primary" id="btn-add-casino"
-                            onclick="document.getElementById('add-casino-form').style.display='block'">
+                        <button class="btn-primary" id="btn-add-casino">
                             <span class="material-icons-round">add</span> Agregar Casino
                         </button>
                     </div>
-
-                    <!-- Add Casino Form (Visually Hidden/Mocked for future) -->
                     <div class="glass-card form-card mb-large" id="add-casino-form" style="display: none;">
-                        <h3 class="mb-small text-lg font-bold">Registrar Nuevo Casino</h3>
+                        <h3 class="mb-small text-lg font-bold" id="casino-form-title">Registrar Nuevo Casino</h3>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>Nombre del Casino</label>
@@ -284,144 +205,28 @@
                                     placeholder="Ej. El Centro">
                             </div>
                             <div class="form-group">
-                                <label>Cantidad Estandar de Snacks</label>
-                                <input type="number" id="casino-snacks-input" class="form-input" placeholder="Ej. 150">
+                                <label>Cantidad Estándar de Snacks (por tipo)</label>
+                                <input type="number" id="casino-snacks-input" class="form-input" placeholder="Ej. 30">
                             </div>
                         </div>
                         <div class="form-actions mt-xl text-right">
-                            <button class="btn-outline-red mr-small"
-                                onclick="document.getElementById('add-casino-form').style.display='none'">Cancelar</button>
+                            <button class="btn-outline-red mr-small" id="btn-cancel-casino">Cancelar</button>
                             <button class="btn-primary" id="btn-save-casino">Guardar Casino</button>
                         </div>
                     </div>
-
-                    <div class="list-container mt-xl">
-                        <!-- Casino Item 1 -->
-                        <div class="glass-card list-item interactive">
-                            <div class="item-info casino-info w-full">
-                                <div class="icon-circle bg-blue"><span
-                                        class="material-icons-round text-blue">casino</span></div>
-                                <div class="casino-details w-full">
-                                    <p class="item-title text-lg">Grand Royal Casino</p>
-                                    <div class="casino-meta">
-                                        <p class="item-desc"><span
-                                                class="material-icons-round text-small text-muted">location_on</span>
-                                            Av. Principal 123</p>
-                                        <p class="item-desc"><span
-                                                class="material-icons-round text-small text-muted">map</span> Barrio
-                                            Centro</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item-trailing flex-row">
-                                <div class="text-right mr-large hide-on-mobile">
-                                    <p class="item-title font-display">500</p>
-                                    <p class="item-desc text-muted">Snacks Estandar</p>
-                                </div>
-                                <div class="action-controls mr-small">
-                                    <button class="icon-btn-small btn-edit" title="Editar Casino"><span
-                                            class="material-icons-round text-small">edit</span></button>
-                                    <button class="icon-btn-small btn-delete" title="Eliminar Casino"><span
-                                            class="material-icons-round text-small">delete</span></button>
-                                </div>
-                                <div class="order-controls">
-                                    <button class="icon-btn-small" title="Subir"><span
-                                            class="material-icons-round">keyboard_arrow_up</span></button>
-                                    <button class="icon-btn-small" title="Bajar"><span
-                                            class="material-icons-round">keyboard_arrow_down</span></button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Casino Item 2 -->
-                        <div class="glass-card list-item interactive">
-                            <div class="item-info casino-info w-full">
-                                <div class="icon-circle bg-orange"><span
-                                        class="material-icons-round text-orange">casino</span></div>
-                                <div class="casino-details w-full">
-                                    <p class="item-title text-lg">Palace Star</p>
-                                    <div class="casino-meta">
-                                        <p class="item-desc"><span
-                                                class="material-icons-round text-small text-muted">location_on</span>
-                                            Calle 45 #8-12</p>
-                                        <p class="item-desc"><span
-                                                class="material-icons-round text-small text-muted">map</span> Zona Norte
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item-trailing flex-row">
-                                <div class="text-right mr-large hide-on-mobile">
-                                    <p class="item-title font-display">300</p>
-                                    <p class="item-desc text-muted">Snacks Estandar</p>
-                                </div>
-                                <div class="action-controls mr-small">
-                                    <button class="icon-btn-small btn-edit" title="Editar Casino"><span
-                                            class="material-icons-round text-small">edit</span></button>
-                                    <button class="icon-btn-small btn-delete" title="Eliminar Casino"><span
-                                            class="material-icons-round text-small">delete</span></button>
-                                </div>
-                                <div class="order-controls">
-                                    <button class="icon-btn-small" title="Subir"><span
-                                            class="material-icons-round">keyboard_arrow_up</span></button>
-                                    <button class="icon-btn-small" title="Bajar"><span
-                                            class="material-icons-round">keyboard_arrow_down</span></button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Casino Item 3 -->
-                        <div class="glass-card list-item interactive">
-                            <div class="item-info casino-info w-full">
-                                <div class="icon-circle bg-green"><span
-                                        class="material-icons-round text-green">casino</span></div>
-                                <div class="casino-details w-full">
-                                    <p class="item-title text-lg">Lucky Club</p>
-                                    <div class="casino-meta">
-                                        <p class="item-desc"><span
-                                                class="material-icons-round text-small text-muted">location_on</span>
-                                            Carrera 9 #15-32</p>
-                                        <p class="item-desc"><span
-                                                class="material-icons-round text-small text-muted">map</span> El Poblado
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item-trailing flex-row">
-                                <div class="text-right mr-large hide-on-mobile">
-                                    <p class="item-title font-display">150</p>
-                                    <p class="item-desc text-muted">Snacks Estandar</p>
-                                </div>
-                                <div class="action-controls mr-small">
-                                    <button class="icon-btn-small btn-edit" title="Editar Casino"><span
-                                            class="material-icons-round text-small">edit</span></button>
-                                    <button class="icon-btn-small btn-delete" title="Eliminar Casino"><span
-                                            class="material-icons-round text-small">delete</span></button>
-                                </div>
-                                <div class="order-controls">
-                                    <button class="icon-btn-small" title="Subir"><span
-                                            class="material-icons-round">keyboard_arrow_up</span></button>
-                                    <button class="icon-btn-small" title="Bajar"><span
-                                            class="material-icons-round">keyboard_arrow_down</span></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="list-container mt-xl" id="casinos-list"></div>
                 </section>
 
-                <!-- Snacks View -->
+                <!-- ==================== SNACKS ==================== -->
                 <section id="snacks" class="page-view">
                     <div class="section-header mt-small">
                         <h2 class="title metallic-text">Gestión de Snacks</h2>
-                        <button class="btn-primary" id="btn-add-snack"
-                            onclick="document.getElementById('add-snack-form').style.display='block'">
+                        <button class="btn-primary" id="btn-add-snack">
                             <span class="material-icons-round">add</span> Agregar Snack
                         </button>
                     </div>
-
-                    <!-- Add Snack Form -->
                     <div class="glass-card form-card mb-large" id="add-snack-form" style="display: none;">
-                        <h3 class="mb-small text-lg font-bold">Registrar Nuevo Snack</h3>
+                        <h3 class="mb-small text-lg font-bold" id="snack-form-title">Registrar Nuevo Snack</h3>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>Nombre del Snack</label>
@@ -429,107 +234,99 @@
                                     placeholder="Ej. Pretzels Mix">
                             </div>
                             <div class="form-group">
-                                <label>Precio de Venta</label>
-                                <input type="number" id="snack-precio-input" class="form-input" placeholder="Ej. 15000">
+                                <label>Precio de Venta (por unidad)</label>
+                                <input type="number" id="snack-precio-input" class="form-input" placeholder="Ej. 1500">
                             </div>
                         </div>
                         <div class="form-actions mt-xl text-right">
-                            <button class="btn-outline-red mr-small"
-                                onclick="document.getElementById('add-snack-form').style.display='none'">Cancelar</button>
+                            <button class="btn-outline-red mr-small" id="btn-cancel-snack">Cancelar</button>
                             <button class="btn-primary" id="btn-save-snack">Guardar Snack</button>
                         </div>
                     </div>
-
-                    <div class="list-container mt-xl">
-                        <!-- Snack Item 1 -->
-                        <div class="glass-card list-item interactive">
-                            <div class="item-info casino-info w-full">
-                                <div class="icon-circle bg-orange"><span
-                                        class="material-icons-round text-orange">cookie</span></div>
-                                <div class="casino-details w-full">
-                                    <p class="item-title text-lg">Pretzels Mix</p>
-                                    <div class="casino-meta">
-                                        <p class="item-desc"><span
-                                                class="material-icons-round text-small text-muted">sell</span>
-                                            Precio de Venta</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item-trailing flex-row">
-                                <div class="text-right mr-large hide-on-mobile">
-                                    <p class="item-title font-display">$15,000</p>
-                                    <p class="item-desc text-muted">COP</p>
-                                </div>
-                                <div class="action-controls mr-small">
-                                    <button class="icon-btn-small btn-edit" title="Editar Snack"><span
-                                            class="material-icons-round text-small">edit</span></button>
-                                    <button class="icon-btn-small btn-delete" title="Eliminar Snack"><span
-                                            class="material-icons-round text-small">delete</span></button>
-                                </div>
-                                <div class="order-controls">
-                                    <button class="icon-btn-small" title="Subir"><span
-                                            class="material-icons-round">keyboard_arrow_up</span></button>
-                                    <button class="icon-btn-small" title="Bajar"><span
-                                            class="material-icons-round">keyboard_arrow_down</span></button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Snack Item 2 -->
-                        <div class="glass-card list-item interactive">
-                            <div class="item-info casino-info w-full">
-                                <div class="icon-circle bg-green"><span
-                                        class="material-icons-round text-green">cookie</span></div>
-                                <div class="casino-details w-full">
-                                    <p class="item-title text-lg">Nueces Surtidas</p>
-                                    <div class="casino-meta">
-                                        <p class="item-desc"><span
-                                                class="material-icons-round text-small text-muted">sell</span>
-                                            Precio de Venta</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item-trailing flex-row">
-                                <div class="text-right mr-large hide-on-mobile">
-                                    <p class="item-title font-display">$22,000</p>
-                                    <p class="item-desc text-muted">COP</p>
-                                </div>
-                                <div class="action-controls mr-small">
-                                    <button class="icon-btn-small btn-edit" title="Editar Snack"><span
-                                            class="material-icons-round text-small">edit</span></button>
-                                    <button class="icon-btn-small btn-delete" title="Eliminar Snack"><span
-                                            class="material-icons-round text-small">delete</span></button>
-                                </div>
-                                <div class="order-controls">
-                                    <button class="icon-btn-small" title="Subir"><span
-                                            class="material-icons-round">keyboard_arrow_up</span></button>
-                                    <button class="icon-btn-small" title="Bajar"><span
-                                            class="material-icons-round">keyboard_arrow_down</span></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="list-container mt-xl" id="snacks-list"></div>
                 </section>
 
-                <!-- Delivery View (Placeholder) -->
+                <!-- ==================== ENTREGAS ==================== -->
                 <section id="delivery" class="page-view">
-                    <div class="placeholder-content glass-card">
-                        <div class="placeholder-icon">
-                            <span class="material-icons-round text-primary">local_shipping</span>
+                    <!-- No active week -->
+                    <div id="delivery-no-week">
+                        <div class="glass-card welcome-card mt-xl">
+                            <div class="welcome-icon-wrap">
+                                <span class="material-icons-round welcome-icon">event_busy</span>
+                            </div>
+                            <h2 class="metallic-text">No hay semana configurada</h2>
+                            <p class="text-muted">Primero selecciona los snacks de la semana desde el Dashboard.</p>
+                            <button class="btn-primary btn-lg mt-xl" id="btn-delivery-go-dash">
+                                <span class="material-icons-round">dashboard</span> Ir al Dashboard
+                            </button>
                         </div>
-                        <h2 class="metallic-text">Registro de Entregas</h2>
-                        <p class="text-muted">Este apartado se irá creando más adelante.</p>
+                    </div>
+
+                    <!-- Active deliveries -->
+                    <div id="delivery-active" style="display:none;">
+                        <div class="glass-card delivery-progress mt-small">
+                            <div class="progress-header">
+                                <h3 class="font-bold">Progreso de Entregas</h3>
+                                <span class="progress-text" id="delivery-progress-text">0 de 0</span>
+                            </div>
+                            <div class="progress-bar-track">
+                                <div class="progress-bar-fill" id="delivery-progress-bar" style="width:0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card mt-small">
+                            <h3 class="mb-small font-bold">📊 Resumen Total de Snacks Necesarios</h3>
+                            <div id="delivery-totals-grid" class="totals-grid"></div>
+                        </div>
+
+                        <div class="search-bar mt-xl">
+                            <span class="material-icons-round search-icon">search</span>
+                            <input type="text" id="delivery-search" class="form-input search-input"
+                                placeholder="Buscar casino por nombre...">
+                        </div>
+
+                        <div class="list-container mt-small" id="delivery-list"></div>
+
+                        <div class="delivery-bottom-actions mt-xl" id="delivery-bottom-actions" style="display:none;">
+                            <button class="btn-primary btn-lg btn-success" id="btn-factura-entregas">
+                                <span class="material-icons-round">receipt_long</span> Generar Cuenta de Cobro Semanal
+                            </button>
+                            <button class="btn-primary btn-lg btn-warning" id="btn-nueva-semana-entregas">
+                                <span class="material-icons-round">restart_alt</span> Iniciar Nueva Semana
+                            </button>
+                        </div>
                     </div>
                 </section>
 
-                <!-- Reports View (Placeholder) -->
-                <section id="reports" class="page-view">
-                    <div class="placeholder-content glass-card">
-                        <div class="placeholder-icon">
-                            <span class="material-icons-round text-primary">bar_chart</span>
+                <!-- ==================== CONTACTOS ==================== -->
+                <section id="contactos" class="page-view">
+                    <div class="section-header mt-small">
+                        <h2 class="title metallic-text">Gestión de Contactos</h2>
+                    </div>
+                    <p class="text-muted mb-large">Administra los nombres y números de WhatsApp de las personas que
+                        reciben los pedidos en cada casino.</p>
+                    <div class="list-container" id="contactos-list">
+                        <div class="glass-card welcome-card">
+                            <p class="text-muted">Cargando contactos...</p>
                         </div>
-                        <h2 class="metallic-text">Reportes de Consumo</h2>
-                        <p class="text-muted">Este apartado se irá creando más adelante.</p>
+                    </div>
+                </section>
+
+                <!-- ==================== REPORTES ==================== -->
+                <section id="reports" class="page-view">
+                    <div class="section-header mt-small">
+                        <h2 class="title metallic-text">Historial de Semanas</h2>
+                        <button class="btn-primary" id="btn-cargar-historial">
+                            <span class="material-icons-round">cloud_download</span> Cargar Historial
+                        </button>
+                    </div>
+                    <div id="reports-list" class="list-container mt-xl">
+                        <div class="glass-card welcome-card">
+                            <div class="welcome-icon-wrap">
+                                <span class="material-icons-round welcome-icon">history</span>
+                            </div>
+                            <p class="text-muted">Haz clic en "Cargar Historial" para ver las semanas anteriores.</p>
+                        </div>
                     </div>
                 </section>
 
@@ -542,17 +339,21 @@
                 <span class="material-icons-round">dashboard</span>
                 <span class="nav-label">Inicio</span>
             </button>
-            <button class="nav-btn" data-target="casinos">
-                <span class="material-icons-round">casino</span>
-                <span class="nav-label">Casinos</span>
+            <button class="nav-btn" data-target="delivery">
+                <span class="material-icons-round">local_shipping</span>
+                <span class="nav-label">Entrega</span>
             </button>
             <button class="nav-btn" data-target="snacks">
                 <span class="material-icons-round">cookie</span>
                 <span class="nav-label">Snacks</span>
             </button>
-            <button class="nav-btn" data-target="delivery">
-                <span class="material-icons-round">local_shipping</span>
-                <span class="nav-label">Entrega</span>
+            <button class="nav-btn" data-target="casinos">
+                <span class="material-icons-round">casino</span>
+                <span class="nav-label">Casinos</span>
+            </button>
+            <button class="nav-btn" data-target="contactos">
+                <span class="material-icons-round">contacts</span>
+                <span class="nav-label">Contactos</span>
             </button>
             <button class="nav-btn" data-target="reports">
                 <span class="material-icons-round">bar_chart</span>
@@ -561,15 +362,71 @@
         </nav>
     </div>
 
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- Modal: Selección de Snacks Semanales -->
+    <div class="modal-overlay" id="modal-seleccion-semana">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h2 class="font-bold">📋 Seleccionar Snacks de la Semana</h2>
+                <button class="icon-btn modal-close" id="modal-seleccion-close">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+            <p class="text-muted mb-small">Elige exactamente <strong>5 snacks</strong> para repartir esta semana.</p>
+            <p class="text-muted mb-small">Seleccionados: <strong id="seleccion-count">0</strong> / 5</p>
+            <div id="snack-selection-grid" class="snack-selection-grid"></div>
+            <div class="form-actions mt-xl">
+                <button class="btn-outline-red mr-small" id="btn-cancelar-seleccion">Cancelar</button>
+                <button class="btn-primary btn-lg" id="btn-confirmar-seleccion" disabled>
+                    <span class="material-icons-round">check</span> Confirmar Selección
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Entrega de Pedido -->
+    <div class="modal-overlay" id="modal-entrega">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h2 class="font-bold">📦 Entregar Pedido</h2>
+                <button class="icon-btn modal-close" id="modal-entrega-close">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+            <h3 class="mb-small" id="entrega-casino-name">--</h3>
+            <div id="entrega-detalle-snacks" class="mb-small"></div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Nombre de quien recibe</label>
+                    <input type="text" id="entrega-receptor-nombre" class="form-input" placeholder="Ej. María García"
+                        list="contactos-datalist" autocomplete="off">
+                    <datalist id="contactos-datalist"></datalist>
+                </div>
+                <div class="form-group">
+                    <label>Número de WhatsApp</label>
+                    <input type="tel" id="entrega-receptor-whatsapp" class="form-input" placeholder="Ej. 3001234567">
+                </div>
+            </div>
+            <div class="form-actions mt-xl">
+                <button class="btn-outline-red mr-small" id="btn-cancelar-entrega">Cancelar</button>
+                <button class="btn-primary btn-lg" id="btn-confirmar-entrega">
+                    <span class="material-icons-round">send</span> Confirmar y Enviar por WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Easter Egg Logo Animation Container -->
     <div class="easter-egg-overlay" id="easter-egg-overlay">
         <div class="easter-egg-container">
             <div class="easter-egg-glow"></div>
-            <img src="LOGO%20CASNACK.png" alt="CASNACK Logo" class="easter-egg-logo" id="easter-egg-logo">
+            <img src="LOGO%20CASNACK.png?v=2" alt="CASNACK Logo" class="easter-egg-logo" id="easter-egg-logo">
         </div>
     </div>
 
-    <script type="module" src="app.js"></script>
+    <script type="module" src="app.js?v=4"></script>
+    <script type="module" src="delivery.js?v=4"></script>
 </body>
 
 </html>
