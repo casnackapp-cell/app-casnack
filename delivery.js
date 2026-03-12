@@ -266,7 +266,8 @@ function renderDashboard() {
     }
 
     // Entregas progress
-    const totalCasinos = casinosCache.length;
+    // Solo contamos los casinos que tienen un documento en entregasMap (es decir, los que participaron esta semana)
+    const totalCasinos = entregasMap.size;
     let entregados = 0;
     let totalDinero = 0;
     entregasMap.forEach(e => {
@@ -295,6 +296,7 @@ function renderDashboard() {
     }
 
     // Show invoice button when all delivered
+    // Asegurarse de que totalCasinos contemplado coincida con entregasMap
     const allDone = totalCasinos > 0 && entregados === totalCasinos;
     const btnFactura = $('btn-factura-semanal');
     const btnNueva = $('btn-nueva-semana');
@@ -333,7 +335,9 @@ function renderDeliveryList() {
     if (!list) return;
 
     const snacksSeleccionados = semanaActiva.snacksSeleccionados || [];
-    const totalCasinos = casinosCache.length;
+    // Trabajamos solo con los casinos involucrados en esta semana
+    const activeCasinos = casinosCache.filter(c => entregasMap.has(c.id));
+    const totalCasinos = activeCasinos.length;
     let entregados = 0;
 
     // Calculate grand totals
@@ -342,7 +346,7 @@ function renderDeliveryList() {
         grandTotals[s.nombre] = { cantidad: 0, precio: s.precio, subtotal: 0 };
     });
 
-    casinosCache.forEach(casino => {
+    activeCasinos.forEach(casino => {
         const entrega = entregasMap.get(casino.id);
         // Use custom quantity if set, otherwise use casino standard
         const qty = (entrega?.cantidadCustom != null) ? Number(entrega.cantidadCustom) : (Number(casino.snackEstandar) || 0);
@@ -389,9 +393,9 @@ function renderDeliveryList() {
     const searchInput = $('delivery-search');
     const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
 
-    let filteredCasinos = casinosCache;
+    let filteredCasinos = activeCasinos;
     if (searchTerm) {
-        filteredCasinos = casinosCache.filter(c => c.nombre.toLowerCase().includes(searchTerm));
+        filteredCasinos = activeCasinos.filter(c => c.nombre.toLowerCase().includes(searchTerm));
     }
 
     const pendientes = filteredCasinos.filter(c => entregasMap.get(c.id)?.estado !== 'entregado');
@@ -606,18 +610,22 @@ async function confirmarSeleccionSemana() {
             fechaInicio: new Date()
         });
 
-        // Create pending delivery for each casino
-        for (const casino of casinosCache) {
-            await setDoc(doc(db, "config", "semanaActiva", "entregas", casino.id), {
-                casinoId: casino.id,
-                casinoNombre: casino.nombre,
-                estado: 'pendiente',
-                fechaEntrega: null,
-                receptorNombre: '',
-                receptorWhatsapp: '',
-                totalCobro: 0
+        // Create pending delivery for each casino that is ACTIVE
+        const createPromises = casinosCache
+            .filter(c => c.activo !== false)
+            .map(casino => {
+                return setDoc(doc(db, "config", "semanaActiva", "entregas", casino.id), {
+                    casinoId: casino.id,
+                    casinoNombre: casino.nombre,
+                    estado: 'pendiente',
+                    fechaEntrega: null,
+                    receptorNombre: '',
+                    receptorWhatsapp: '',
+                    totalCobro: 0
+                });
             });
-        }
+
+        await Promise.all(createPromises);
 
         closeSelectionModal();
         Swal.fire({ icon: 'success', title: '¡Semana Configurada!', text: 'Los snacks han sido seleccionados. Ve a Entregas para empezar a repartir.', timer: 2000, showConfirmButton: false, ...swalTheme() });

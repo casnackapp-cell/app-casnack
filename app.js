@@ -5,7 +5,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import {
     getFirestore, collection, addDoc, onSnapshot,
-    doc, deleteDoc, updateDoc
+    doc, deleteDoc, updateDoc, getDoc, setDoc
 } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
 // ---- Firebase Configuration ----
@@ -141,6 +141,8 @@ document.addEventListener('DOMContentLoaded', () => {
         inputCasinoAddr.value = '';
         inputCasinoBarrio.value = '';
         inputCasinoSnacks.value = '';
+        const inputCasinoActivo = document.getElementById('casino-activo-input');
+        if (inputCasinoActivo) inputCasinoActivo.checked = true;
         if (casinoFormTitle) casinoFormTitle.textContent = 'Registrar Nuevo Casino';
         if (btnSaveCasino) btnSaveCasino.innerHTML = 'Guardar Casino';
         addCasinoFormCard.style.display = 'none';
@@ -194,6 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     inputCasinoAddr.value = data.direccion || '';
                     inputCasinoBarrio.value = data.barrio || '';
                     inputCasinoSnacks.value = data.snackEstandar || '';
+                    const inputCasinoActivo = document.getElementById('casino-activo-input');
+                    if (inputCasinoActivo) inputCasinoActivo.checked = data.activo !== false;
                     if (casinoFormTitle) casinoFormTitle.textContent = 'Editar Casino';
                     if (btnSaveCasino) btnSaveCasino.innerHTML = 'Actualizar Casino';
                     addCasinoFormCard.style.display = 'block';
@@ -320,6 +324,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const addr = inputCasinoAddr.value.trim();
             const barrio = inputCasinoBarrio.value.trim();
             const qty = inputCasinoSnacks.value.trim();
+            const inputCasinoActivo = document.getElementById('casino-activo-input');
+            const isActivo = inputCasinoActivo ? inputCasinoActivo.checked : true;
 
             if (!name) {
                 Swal.fire({ title: 'Campo requerido', text: 'El nombre del casino es obligatorio.', icon: 'warning', ...swalTheme() });
@@ -335,18 +341,68 @@ document.addEventListener('DOMContentLoaded', () => {
                         nombre: name,
                         direccion: addr || 'Sin dirección',
                         barrio: barrio || 'Desconocido',
-                        snackEstandar: qty || '0'
+                        snackEstandar: qty || '0',
+                        activo: isActivo
                     });
+
+                    // Si hay una semana activa, actualizar entrega
+                    try {
+                        const semanaActivaSnap = await getDoc(doc(db, "config", "semanaActiva"));
+                        if (semanaActivaSnap.exists() && isActivo) {
+                            const entregaRef = doc(db, "config", "semanaActiva", "entregas", editingCasinoId);
+                            const entregaSnap = await getDoc(entregaRef);
+                            // Solo se crea en pendiente si no existe
+                            if (!entregaSnap.exists()) {
+                                await setDoc(entregaRef, {
+                                    casinoId: editingCasinoId,
+                                    casinoNombre: name,
+                                    estado: 'pendiente',
+                                    fechaEntrega: null,
+                                    receptorNombre: '',
+                                    receptorWhatsapp: '',
+                                    totalCobro: 0
+                                });
+                            } else {
+                                // Si ya existe actualiza su nombre al nuevo por si acaso
+                                await updateDoc(entregaRef, { casinoNombre: name });
+                            }
+                        } else if (semanaActivaSnap.exists() && !isActivo) {
+                            // Opcional: Si se pasa a inactivo, podríamos borrarlo de las entregas pendientes actuales si no ha sido entregado.
+                            const entregaRef = doc(db, "config", "semanaActiva", "entregas", editingCasinoId);
+                            const entregaSnap = await getDoc(entregaRef);
+                            if (entregaSnap.exists() && entregaSnap.data().estado !== 'entregado') {
+                                await deleteDoc(entregaRef);
+                            }
+                        }
+                    } catch (e) { console.error("Error gestionando entrega de semana activa", e); }
+
                     Swal.fire({ icon: 'success', title: '¡Actualizado!', text: 'Casino actualizado correctamente.', timer: 1500, showConfirmButton: false, ...swalTheme() });
                 } else {
-                    await addDoc(collection(db, "casinos"), {
+                    const newCasinoRef = await addDoc(collection(db, "casinos"), {
                         nombre: name,
                         direccion: addr || 'Sin dirección',
                         barrio: barrio || 'Desconocido',
                         snackEstandar: qty || '0',
+                        activo: isActivo,
                         orden: Date.now(),
                         fechaCreacion: new Date()
                     });
+
+                    try {
+                        const semanaActivaSnap = await getDoc(doc(db, "config", "semanaActiva"));
+                        if (semanaActivaSnap.exists() && isActivo) {
+                            await setDoc(doc(db, "config", "semanaActiva", "entregas", newCasinoRef.id), {
+                                casinoId: newCasinoRef.id,
+                                casinoNombre: name,
+                                estado: 'pendiente',
+                                fechaEntrega: null,
+                                receptorNombre: '',
+                                receptorWhatsapp: '',
+                                totalCobro: 0
+                            });
+                        }
+                    } catch (e) { console.error("Error agregando a entregas de semana activa", e); }
+
                     Swal.fire({ icon: 'success', title: '¡Guardado!', text: 'Casino registrado correctamente.', timer: 1500, showConfirmButton: false, ...swalTheme() });
                 }
 
@@ -422,12 +478,15 @@ document.addEventListener('DOMContentLoaded', () => {
         casinosListContainer.innerHTML = '';
 
         docs.forEach((casino) => {
+            const isInactive = casino.activo === false;
+            const inactiveBadge = isInactive ? `<span class="badge-inactive">INACTIVO</span>` : '';
+            const inactiveClass = isInactive ? 'casino-inactivo' : '';
             const html = `
-                <div class="glass-card list-item interactive" style="animation: fadeIn var(--transition-smooth);" data-id="${casino.id}" data-orden="${casino.orden || 0}">
+                <div class="glass-card list-item interactive ${inactiveClass}" style="animation: fadeIn var(--transition-smooth);" data-id="${casino.id}" data-orden="${casino.orden || 0}">
                     <div class="item-info casino-info w-full">
                         <div class="icon-circle bg-blue"><span class="material-icons-round text-blue">casino</span></div>
                         <div class="casino-details w-full">
-                            <p class="item-title text-lg">${escapeHTML(casino.nombre)}</p>
+                            <p class="item-title text-lg">${escapeHTML(casino.nombre)} ${inactiveBadge}</p>
                             <div class="casino-meta">
                                 <p class="item-desc"><span class="material-icons-round text-small text-muted">location_on</span> ${escapeHTML(casino.direccion)}</p>
                                 <p class="item-desc"><span class="material-icons-round text-small text-muted">map</span> Barrio ${escapeHTML(casino.barrio)}</p>
