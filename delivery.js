@@ -97,6 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
         snap.forEach(d => entregasMap.set(d.id, { id: d.id, ...d.data() }));
         renderDeliveryList();
         renderDashboard();
+        // Auto-scan: limpiar entregas huérfanas (casinos eliminados o inactivos)
+        limpiarEntregasHuerfanas();
     });
 
     // ---- BUTTON: Configurar Semana ----
@@ -225,6 +227,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// ==================== AUTO-SCAN: LIMPIEZA DE ENTREGAS HUÉRFANAS ====================
+// Se ejecuta automáticamente cuando cambian las entregas o los casinos.
+// Detecta entregas que apuntan a casinos eliminados o desactivados y las elimina.
+let cleanupRunning = false; // Evita ejecuciones concurrentes
+async function limpiarEntregasHuerfanas() {
+    if (cleanupRunning || !semanaActiva || entregasMap.size === 0 || casinosCache.length === 0) return;
+    cleanupRunning = true;
+    try {
+        // Set de IDs de casinos que actualmente existen y están activos
+        const activeCasinoIds = new Set(
+            casinosCache.filter(c => c.activo !== false).map(c => c.id)
+        );
+
+        const borrarPromises = [];
+        entregasMap.forEach((entrega, casinoId) => {
+            // Si el casino ya no existe o fue desactivado, y la entrega NO está marcada como entregada
+            if (!activeCasinoIds.has(casinoId) && entrega.estado !== 'entregado') {
+                console.log(`[Auto-Scan] Limpiando entrega huérfana: ${entrega.casinoNombre || casinoId}`);
+                borrarPromises.push(
+                    deleteDoc(doc(db, "config", "semanaActiva", "entregas", casinoId))
+                );
+            }
+        });
+
+        if (borrarPromises.length > 0) {
+            await Promise.all(borrarPromises);
+            // El onSnapshot se encargará de actualizar la UI automáticamente
+        }
+    } catch (err) {
+        console.error("[Auto-Scan] Error limpiando entregas huérfanas:", err);
+    } finally {
+        cleanupRunning = false;
+    }
+}
 
 // ==================== DASHBOARD ====================
 function renderDashboard() {

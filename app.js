@@ -302,6 +302,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         const collName = isCasino ? "casinos" : (isSnack ? "snacks" : null);
                         if (collName) {
                             deleteDoc(doc(db, collName, docId)).catch(err => console.error("Error eliminando:", err));
+                            // Si es casino y hay semana activa, eliminar su entrega huérfana
+                            if (isCasino) {
+                                const entregaRef = doc(db, "config", "semanaActiva", "entregas", docId);
+                                deleteDoc(entregaRef).catch(() => {}); // Silencioso si no existe
+                            }
                         }
                     }
                     Swal.fire({
