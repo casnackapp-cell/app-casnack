@@ -225,7 +225,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const contactId = e.target.closest('.btn-eliminar-contacto').dataset.contactId;
             eliminarContacto(contactId);
         }
+        // ---- Snacks Extras ----
+        if (e.target.closest('.btn-agregar-extra')) {
+            const casinoId = e.target.closest('.btn-agregar-extra').dataset.casinoId;
+            openExtraSnackModal(casinoId);
+        }
+        if (e.target.closest('.btn-extra-delete')) {
+            const casinoId = e.target.closest('.btn-extra-delete').dataset.casinoId;
+            const snackId = e.target.closest('.btn-extra-delete').dataset.snackId;
+            eliminarSnackExtra(casinoId, snackId);
+        }
     });
+
+    // ---- Modal Snack Extra Events ----
+    $('modal-extra-close')?.addEventListener('click', closeExtraSnackModal);
+    $('btn-cancelar-extra')?.addEventListener('click', closeExtraSnackModal);
+    $('extra-snack-select')?.addEventListener('change', actualizarTotalExtra);
+    $('extra-snack-cantidad')?.addEventListener('input', actualizarTotalExtra);
+    $('btn-confirmar-extra')?.addEventListener('click', confirmarSnackExtra);
 });
 
 // ==================== AUTO-SCAN: LIMPIEZA DE ENTREGAS HUÉRFANAS ====================
@@ -391,6 +408,16 @@ function renderDeliveryList() {
             grandTotals[s.nombre].cantidad += qty;
             grandTotals[s.nombre].subtotal += qty * s.precio;
         });
+
+        // Agregar extras al total
+        const extras = entrega?.snacksExtras || [];
+        extras.forEach(extra => {
+            if (grandTotals[extra.snackNombre]) {
+                grandTotals[extra.snackNombre].cantidad += extra.cantidad;
+                grandTotals[extra.snackNombre].subtotal += extra.subtotal;
+            }
+        });
+
         if (entrega?.estado === 'entregado') entregados++;
     });
 
@@ -458,6 +485,7 @@ function renderDeliveryList() {
         const statusIcon = isDelivered ? 'check_circle' : 'pending';
         const statusText = isDelivered ? 'Entregado' : 'Pendiente';
 
+        // Snacks estándar
         let snacksHTML = '';
         let casinoTotal = 0;
         snacksSeleccionados.forEach(s => {
@@ -469,6 +497,42 @@ function renderDeliveryList() {
                 <span>${formatCOP(sub)}</span>
             </div>`;
         });
+
+        // Snacks Extras
+        const extras = entrega?.snacksExtras || [];
+        let extrasHTML = '';
+        let extrasTotal = 0;
+        if (extras.length > 0) {
+            extrasHTML = `<div class="snacks-extra-section">
+                <div class="snacks-extra-title">
+                    <span class="material-icons-round">add_circle</span>
+                    <span>Snacks Adicionales</span>
+                </div>`;
+            extras.forEach(extra => {
+                extrasTotal += extra.subtotal || 0;
+                extrasHTML += `<div class="snack-extra-item">
+                    <span class="snack-extra-name">${escapeHTML(extra.snackNombre)}</span>
+                    <span class="snack-extra-qty">${extra.cantidad} uds</span>
+                    <span class="snack-extra-price">${formatCOP(extra.subtotal)}</span>
+                    <div class="snack-extra-actions">
+                        <button class="btn-extra-action btn-extra-delete delete"
+                            data-casino-id="${casino.id}"
+                            data-snack-id="${extra.snackId}"
+                            title="Eliminar extra">
+                            <span class="material-icons-round">delete</span>
+                        </button>
+                    </div>
+                </div>`;
+            });
+            extrasHTML += `</div>`;
+        }
+
+        // Botón agregar extra (solo si no está entregado)
+        const btnAgregarExtra = !isDelivered ? `
+            <button class="btn-agregar-extra" data-casino-id="${casino.id}">
+                <span class="material-icons-round">add_circle</span> Agregar Snack Extra
+            </button>
+        ` : '';
 
         const qtyLabel = isCustom
             ? `<span class="badge-custom-qty">Modificado: ${qty} uds <span class="text-muted">(estándar: ${qtyOriginal})</span></span>`
@@ -492,6 +556,8 @@ function renderDeliveryList() {
             </button>`;
         }
 
+        const totalConExtras = casinoTotal + extrasTotal;
+
         list.innerHTML += `
             <div class="glass-card delivery-card ${statusClass}" data-casino-id="${casino.id}">
                 <div class="delivery-card-header" data-toggle="${casino.id}" style="cursor: pointer; align-items: center;">
@@ -514,10 +580,15 @@ function renderDeliveryList() {
                         </div>
                         ${snacksHTML}
                         <div class="delivery-snack-row delivery-snack-total">
-                            <span><strong>Total Casino</strong></span><span></span><span><strong>${formatCOP(casinoTotal)}</strong></span>
+                            <span><strong>Total Estándar</strong></span><span></span><span><strong>${formatCOP(casinoTotal)}</strong></span>
                         </div>
                     </div>
-                    <div class="delivery-card-actions">${actionsHTML}</div>
+                    ${extrasHTML}
+                    ${btnAgregarExtra}
+                    <div class="delivery-snack-row delivery-snack-total" style="margin-top: 10px; background: rgba(139, 92, 246, 0.15); border-top: 2px solid var(--color-primary);">
+                        <span><strong>TOTAL FINAL</strong></span><span></span><span><strong style="color: var(--color-primary);">${formatCOP(totalConExtras)}</strong></span>
+                    </div>
+                    <div class="delivery-card-actions" style="margin-top: 16px;">${actionsHTML}</div>
                 </div>
             </div>`;
     });
@@ -685,12 +756,26 @@ function openEntregaModal(casinoId) {
     const entregaData = entregasMap.get(casinoId);
     const qty = (entregaData?.cantidadCustom != null) ? Number(entregaData.cantidadCustom) : (Number(casino.snackEstandar) || 0);
     let html = '<div class="entrega-detail-list">';
+
+    // Snacks estándar
     semanaActiva.snacksSeleccionados.forEach(s => {
         html += `<div class="entrega-detail-item">
             <span>🍿 ${escapeHTML(s.nombre)}</span>
             <strong>${qty} unidades</strong>
         </div>`;
     });
+
+    // Snacks extras
+    const extras = entregaData?.snacksExtras || [];
+    if (extras.length > 0) {
+        extras.forEach(e => {
+            html += `<div class="entrega-detail-item" style="background: rgba(139, 92, 246, 0.15); border-color: rgba(139, 92, 246, 0.3);">
+                <span>🎁 ${escapeHTML(e.snackNombre)} <small style="color: var(--color-primary);">(Extra)</small></span>
+                <strong>${e.cantidad} unidades</strong>
+            </div>`;
+        });
+    }
+
     html += '</div>';
     detalle.innerHTML = html;
 
@@ -725,12 +810,19 @@ async function confirmarEntrega() {
     const entregaInfo = entregasMap.get(currentEntregaCasinoId);
     const qty = (entregaInfo?.cantidadCustom != null) ? Number(entregaInfo.cantidadCustom) : (Number(casino.snackEstandar) || 0);
     const now = new Date();
+
+    // Calcular total de snacks estándar
     let totalCobro = 0;
     const detalleSnacks = semanaActiva.snacksSeleccionados.map(s => {
         const sub = qty * s.precio;
         totalCobro += sub;
         return { nombre: s.nombre, cantidad: qty, precioUnitario: s.precio, subtotal: sub };
     });
+
+    // Obtener snacks extras y sumarlos al total
+    const snacksExtras = entregaInfo?.snacksExtras || [];
+    const totalExtras = snacksExtras.reduce((sum, e) => sum + (e.subtotal || 0), 0);
+    const totalFinal = totalCobro + totalExtras;
 
     try {
         // Update delivery
@@ -740,7 +832,8 @@ async function confirmarEntrega() {
             receptorWhatsapp: whatsapp,
             fechaEntrega: now,
             detalleSnacks,
-            totalCobro
+            snacksExtras,
+            totalCobro: totalFinal
         });
 
         // Save/update contact
@@ -759,12 +852,22 @@ async function confirmarEntrega() {
         msg += `Hola, ${nombre}. Se ha realizado la entrega de snacks programada para hoy.\n\n`;
         msg += `*Detalle del Pedido:*\n`;
         detalleSnacks.forEach(s => { msg += `• ${s.nombre}: ${s.cantidad} unidades\n`; });
+
+        // Agregar extras si existen
+        if (snacksExtras.length > 0) {
+            msg += `\n*🎁 Snacks Adicionales:*\n`;
+            snacksExtras.forEach(e => {
+                msg += `• ${e.snackNombre}: ${e.cantidad} unidades\n`;
+            });
+        }
+
+        msg += `\n💰 *TOTAL: ${formatCOP(totalFinal)}*\n`;
         msg += `\n📅 Fecha: ${formatDate(now)}\n`;
         msg += `⏰ Hora: ${formatTime(now)}\n`;
         msg += `👤 Recibido por: ${nombre}\n\n`;
         msg += `*Acción Requerida:*\n`;
         msg += `Confirma que todo está correcto haciendo clic aquí:\n`;
-        const confirmMsg = encodeURIComponent(`Confirmo la recepción de los snacks en ${casino.nombre} el día ${formatDate(now)}`);
+        const confirmMsg = encodeURIComponent(`Confirmo la recepción de los snacks en ${casino.nombre} el día ${formatDate(now)} por un total de ${formatCOP(totalFinal)}`);
         msg += `🔗 https://wa.me/573028563958?text=${confirmMsg}`;
 
         const waURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`;
@@ -785,6 +888,160 @@ function updateContactosDatalist() {
     contactosCache.forEach(c => {
         dl.innerHTML += `<option value="${escapeHTML(c.nombre)}">`;
     });
+}
+
+// ==================== SNACKS EXTRAS ====================
+let currentExtraCasinoId = null;
+
+function openExtraSnackModal(casinoId) {
+    currentExtraCasinoId = casinoId;
+    const casino = casinosCache.find(c => c.id === casinoId);
+    if (!casino || !semanaActiva) return;
+
+    $('extra-casino-name').textContent = casino.nombre;
+
+    // Llenar select con los 5 snacks de la semana
+    const select = $('extra-snack-select');
+    select.innerHTML = '<option value="">-- Elige un snack --</option>';
+    semanaActiva.snacksSeleccionados.forEach(s => {
+        select.innerHTML += `<option value="${s.id}" data-precio="${s.precio}">${escapeHTML(s.nombre)} - ${formatCOP(s.precio)}/ud</option>`;
+    });
+
+    // Resetear campos
+    $('extra-snack-cantidad').value = '1';
+    $('extra-precio-unitario').textContent = '$0';
+    $('extra-total').textContent = '$0';
+    $('btn-confirmar-extra').disabled = true;
+
+    $('modal-snack-extra').classList.add('active');
+}
+
+function closeExtraSnackModal() {
+    $('modal-snack-extra').classList.remove('active');
+    currentExtraCasinoId = null;
+}
+
+function actualizarTotalExtra() {
+    const select = $('extra-snack-select');
+    const cantidad = Number($('extra-snack-cantidad').value) || 0;
+    const option = select.options[select.selectedIndex];
+
+    if (!option.value || cantidad < 1) {
+        $('extra-precio-unitario').textContent = '$0';
+        $('extra-total').textContent = '$0';
+        $('btn-confirmar-extra').disabled = true;
+        return;
+    }
+
+    const precio = Number(option.dataset.precio) || 0;
+    const total = precio * cantidad;
+
+    $('extra-precio-unitario').textContent = formatCOP(precio);
+    $('extra-total').textContent = formatCOP(total);
+    $('btn-confirmar-extra').disabled = false;
+}
+
+async function confirmarSnackExtra() {
+    const select = $('extra-snack-select');
+    const snackId = select.value;
+    const cantidad = Number($('extra-snack-cantidad').value);
+
+    if (!snackId || cantidad < 1) {
+        Swal.fire({ title: 'Datos inválidos', text: 'Selecciona un snack y una cantidad válida.', icon: 'warning', ...swalTheme() });
+        return;
+    }
+
+    const casino = casinosCache.find(c => c.id === currentExtraCasinoId);
+    if (!casino || !semanaActiva) return;
+
+    const snack = semanaActiva.snacksSeleccionados.find(s => s.id === snackId);
+    if (!snack) return;
+
+    try {
+        const entregaRef = doc(db, "config", "semanaActiva", "entregas", currentExtraCasinoId);
+        const entregaSnap = await getDoc(entregaRef);
+
+        // Obtener extras existentes o crear array vacío
+        const extrasExistentes = entregaSnap.exists() ? (entregaSnap.data().snacksExtras || []) : [];
+
+        // Verificar si ya existe este snack en extras
+        const indiceExistente = extrasExistentes.findIndex(e => e.snackId === snackId);
+        const nuevoExtra = {
+            snackId,
+            snackNombre: snack.nombre,
+            cantidad,
+            precioUnitario: snack.precio,
+            subtotal: snack.precio * cantidad
+        };
+
+        if (indiceExistente >= 0) {
+            // Sumar a la cantidad existente
+            extrasExistentes[indiceExistente].cantidad += cantidad;
+            extrasExistentes[indiceExistente].subtotal = extrasExistentes[indiceExistente].cantidad * extrasExistentes[indiceExistente].precioUnitario;
+        } else {
+            // Agregar nuevo extra
+            extrasExistentes.push(nuevoExtra);
+        }
+
+        await updateDoc(entregaRef, {
+            snacksExtras: extrasExistentes
+        });
+
+        closeExtraSnackModal();
+        Swal.fire({
+            icon: 'success',
+            title: 'Extra Agregado',
+            text: `${cantidad} unidades de ${snack.nombre} agregadas al pedido.`,
+            timer: 1500,
+            showConfirmButton: false,
+            ...swalTheme()
+        });
+    } catch (err) {
+        console.error(err);
+        Swal.fire({ title: 'Error', text: 'No se pudo agregar el snack extra.', icon: 'error', ...swalTheme() });
+    }
+}
+
+async function eliminarSnackExtra(casinoId, snackId) {
+    const casino = casinosCache.find(c => c.id === casinoId);
+    if (!casino) return;
+
+    const result = await Swal.fire({
+        title: '¿Eliminar extra?',
+        text: 'Se removerá este snack extra del pedido.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        ...swalTheme()
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+        const entregaRef = doc(db, "config", "semanaActiva", "entregas", casinoId);
+        const entregaSnap = await getDoc(entregaRef);
+
+        if (!entregaSnap.exists()) return;
+
+        const extras = entregaSnap.data().snacksExtras || [];
+        const nuevosExtras = extras.filter(e => e.snackId !== snackId);
+
+        await updateDoc(entregaRef, {
+            snacksExtras: nuevosExtras
+        });
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Extra Eliminado',
+            timer: 1500,
+            showConfirmButton: false,
+            ...swalTheme()
+        });
+    } catch (err) {
+        console.error(err);
+        Swal.fire({ title: 'Error', text: 'No se pudo eliminar el extra.', icon: 'error', ...swalTheme() });
+    }
 }
 
 // ==================== FACTURA PDF SEMANAL ====================
@@ -887,12 +1144,28 @@ async function generarFacturaSemanal() {
         pdf.text('Fecha: ' + (entrega.fechaEntrega ? formatDate(entrega.fechaEntrega) + ' - ' + formatTime(entrega.fechaEntrega) : '--'), 18, y);
         y += 6;
 
-        // Snack table
+        // Snack table - estándar
         const tableData = (entrega.detalleSnacks || []).map(s => [
             s.nombre, String(s.cantidad), formatCOP(s.precioUnitario), formatCOP(s.subtotal)
         ]);
-        tableData.push([{ content: 'TOTAL CASINO', styles: { fontStyle: 'bold' } }, '', '', { content: formatCOP(entrega.totalCobro), styles: { fontStyle: 'bold' } }]);
-        grandTotal += entrega.totalCobro || 0;
+
+        // Agregar snacks extras si existen
+        const extras = entrega.snacksExtras || [];
+        if (extras.length > 0) {
+            extras.forEach(extra => {
+                tableData.push([
+                    `${extra.snackNombre} (Extra)`,
+                    String(extra.cantidad),
+                    formatCOP(extra.precioUnitario),
+                    formatCOP(extra.subtotal)
+                ]);
+            });
+        }
+
+        // Calcular total con extras
+        const totalConExtras = (entrega.totalCobro || 0) + (extras.reduce((sum, e) => sum + (e.subtotal || 0), 0));
+        tableData.push([{ content: 'TOTAL CASINO', styles: { fontStyle: 'bold' } }, '', '', { content: formatCOP(totalConExtras), styles: { fontStyle: 'bold' } }]);
+        grandTotal += totalConExtras;
 
         pdf.autoTable({
             startY: y,
@@ -1176,8 +1449,24 @@ async function generarFacturaHistorial(weekData) {
         const tableData = (entrega.detalleSnacks || []).map(s => [
             s.nombre, String(s.cantidad), formatCOP(s.precioUnitario), formatCOP(s.subtotal)
         ]);
-        tableData.push([{ content: 'TOTAL CASINO', styles: { fontStyle: 'bold' } }, '', '', { content: formatCOP(entrega.totalCobro), styles: { fontStyle: 'bold' } }]);
-        grandTotal += entrega.totalCobro || 0;
+
+        // Agregar snacks extras si existen
+        const extras = entrega.snacksExtras || [];
+        if (extras.length > 0) {
+            extras.forEach(extra => {
+                tableData.push([
+                    `${extra.snackNombre} (Extra)`,
+                    String(extra.cantidad),
+                    formatCOP(extra.precioUnitario),
+                    formatCOP(extra.subtotal)
+                ]);
+            });
+        }
+
+        // Calcular total con extras
+        const totalConExtras = (entrega.totalCobro || 0) + (extras.reduce((sum, e) => sum + (e.subtotal || 0), 0));
+        tableData.push([{ content: 'TOTAL CASINO', styles: { fontStyle: 'bold' } }, '', '', { content: formatCOP(totalConExtras), styles: { fontStyle: 'bold' } }]);
+        grandTotal += totalConExtras;
 
         pdf.autoTable({
             startY: y, margin: { left: 18, right: 18 },
@@ -1244,7 +1533,7 @@ async function deshacerEntrega(casinoId) {
 
     const result = await Swal.fire({
         title: '¿Deshacer entrega?',
-        text: `${casino.nombre} volverá a estado Pendiente.`,
+        text: `${casino.nombre} volverá a estado Pendiente. Los snacks extras se conservarán.`,
         icon: 'warning', showCancelButton: true,
         confirmButtonText: 'Sí, deshacer',
         cancelButtonText: 'Cancelar', ...swalTheme()
@@ -1253,13 +1542,22 @@ async function deshacerEntrega(casinoId) {
     if (!result.isConfirmed) return;
 
     try {
-        await updateDoc(doc(db, "config", "semanaActiva", "entregas", casinoId), {
+        // Obtener los extras actuales para conservarlos
+        const entregaRef = doc(db, "config", "semanaActiva", "entregas", casinoId);
+        const entregaSnap = await getDoc(entregaRef);
+        const extrasActuales = entregaSnap.exists() ? (entregaSnap.data().snacksExtras || []) : [];
+        const cantidadCustom = entregaSnap.exists() ? (entregaSnap.data().cantidadCustom ?? null) : null;
+
+        await updateDoc(entregaRef, {
             estado: 'pendiente',
             receptorNombre: '',
             receptorWhatsapp: '',
             fechaEntrega: null,
             detalleSnacks: [],
-            totalCobro: 0
+            totalCobro: 0,
+            // Conservar extras y cantidad custom
+            snacksExtras: extrasActuales,
+            cantidadCustom: cantidadCustom
         });
         Swal.fire({ icon: 'success', title: 'Entrega deshecha', text: `${casino.nombre} vuelve a Pendiente.`, timer: 1500, showConfirmButton: false, ...swalTheme() });
     } catch (err) {
