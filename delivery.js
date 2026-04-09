@@ -861,13 +861,12 @@ async function confirmarEntrega() {
             });
         }
 
-        msg += `\n💰 *TOTAL: ${formatCOP(totalFinal)}*\n`;
         msg += `\n📅 Fecha: ${formatDate(now)}\n`;
         msg += `⏰ Hora: ${formatTime(now)}\n`;
         msg += `👤 Recibido por: ${nombre}\n\n`;
         msg += `*Acción Requerida:*\n`;
         msg += `Confirma que todo está correcto haciendo clic aquí:\n`;
-        const confirmMsg = encodeURIComponent(`Confirmo la recepción de los snacks en ${casino.nombre} el día ${formatDate(now)} por un total de ${formatCOP(totalFinal)}`);
+        const confirmMsg = encodeURIComponent(`Confirmo la recepción de los snacks en ${casino.nombre} el día ${formatDate(now)}`);
         msg += `🔗 https://wa.me/573028563958?text=${confirmMsg}`;
 
         const waURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`;
