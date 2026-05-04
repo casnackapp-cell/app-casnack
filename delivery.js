@@ -1161,8 +1161,8 @@ async function generarFacturaSemanal() {
             });
         }
 
-        // Calcular total con extras
-        const totalConExtras = (entrega.totalCobro || 0) + (extras.reduce((sum, e) => sum + (e.subtotal || 0), 0));
+        // entrega.totalCobro ya incluye estándar + extras (ver registrarEntrega)
+        const totalConExtras = entrega.totalCobro || 0;
         tableData.push([{ content: 'TOTAL CASINO', styles: { fontStyle: 'bold' } }, '', '', { content: formatCOP(totalConExtras), styles: { fontStyle: 'bold' } }]);
         grandTotal += totalConExtras;
 
@@ -1462,8 +1462,8 @@ async function generarFacturaHistorial(weekData) {
             });
         }
 
-        // Calcular total con extras
-        const totalConExtras = (entrega.totalCobro || 0) + (extras.reduce((sum, e) => sum + (e.subtotal || 0), 0));
+        // entrega.totalCobro ya incluye estándar + extras (ver registrarEntrega)
+        const totalConExtras = entrega.totalCobro || 0;
         tableData.push([{ content: 'TOTAL CASINO', styles: { fontStyle: 'bold' } }, '', '', { content: formatCOP(totalConExtras), styles: { fontStyle: 'bold' } }]);
         grandTotal += totalConExtras;
 
